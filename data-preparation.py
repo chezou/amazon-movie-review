@@ -1,3 +1,5 @@
+# Amazon moview reviews: Data preparation and simple plotting
+
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, FloatType, LongType, IntegerType
 from pyspark.sql.functions import split, from_unixtime
@@ -45,7 +47,8 @@ df2.write.saveAsTable('amazon_movie_reviews', format="parquet", mode='overwrite'
 df2.groupBy("score").count().show()
 pd_df = df2.groupBy("score", "helpfulness_agreed").count().toPandas()
 
+### Relationship beween score and helpfulness_agreed
 import seaborn as sns
-sns.jointplot(x="score", y="helpfulness_agreed", data=pd_df)
+sns.jointplot(x="score", y="helpfulness_agreed", kind='kde',data=pd_df)
 
 spark.stop()
