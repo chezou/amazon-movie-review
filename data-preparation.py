@@ -10,6 +10,7 @@ spark = SparkSession\
     .getOrCreate()
 
 ## Original schema of json
+# ```
 # schema_json = StructType([
 #                    StructField("product/productId", StringType(), nullable=False),
 #                    StructField("review/helpfulness", StringType(), nullable=False),
@@ -20,6 +21,7 @@ spark = SparkSession\
 #                    StructField("review/time", LongType(), nullable=False),
 #                    StructField("review/userId", StringType(), nullable=False)
 #                    ])
+# ```
 
 df = spark.read.json("movies/movies.json")
 
@@ -43,12 +45,5 @@ df2.show()
 
 
 df2.write.saveAsTable('amazon_movie_reviews', format="parquet", mode='overwrite')
-
-df2.groupBy("score").count().show()
-pd_df = df2.groupBy("score", "helpfulness_agreed").count().toPandas()
-
-### Relationship beween score and helpfulness_agreed
-import seaborn as sns
-sns.jointplot(x="score", y="helpfulness_agreed", kind='kde',data=pd_df)
 
 spark.stop()
