@@ -1,5 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import year
+from pyspark.sql.functions import desc
+
 
 spark = SparkSession\
     .builder\
@@ -28,5 +30,10 @@ pdf.plot.scatter(x='year', y='score', s=pdf['count']*0.002)
 #sns.heatmap(pdf.pivot('year','score', 'count'))
 pdf.pivot('year','score', 'count').plot(kind='bar', stacked=True)
 
+### Show top reviewd 10 users
+df.groupby('user_id').count().sort(desc('count')).show(10)
+
+### Show top reviewd movies
+df.dropna().groupby("product_id").count().sort(desc('count')).show(10)
 
 spark.stop()
