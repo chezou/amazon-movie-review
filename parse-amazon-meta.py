@@ -49,14 +49,18 @@ ASIN: 0231118597
 """
 
 import re
+import gzip
+from utils import get_line_number
 
-def parse(metadata):
+def parse(filename):
+  IGNORE_FIELDS = ['Total items', 'reviews']
+  f = gzip.open(filename, 'r')
   entry = {}
   categories = []
   reviews = []
   similar_items = []
   
-  for line in metadata.splitlines():
+  for line in f:
     line = line.strip()
     colonPos = line.find(':')
 
@@ -83,14 +87,16 @@ def parse(metadata):
                       'rating': int(review_info[4]), 
                       'votes': int(review_info[6]), 
                       'helpful': int(review_info[8])})
-      
+
     elif line.startswith("|"):
       categories.append(line)
 
     elif colonPos != -1:
       eName = line[:colonPos]
       rest = line[colonPos+2:]
-      entry[eName] = unicode(rest.strip(), errors='ignore')
+
+      if not eName in IGNORE_FIELDS:
+        entry[eName] = unicode(rest.strip(), errors='ignore')
 
   if reviews:
     entry["reviews"] = reviews
@@ -99,8 +105,13 @@ def parse(metadata):
     
   yield entry
 
-  
-import json
-for e in parse(example):
+
+file_path = "data/amazon-meta.txt.gz"
+
+import simplejson
+from tqdm import tqdm
+
+for e in tqdm(parse(file_path), total=get_line_number(file_path)):
   if e:
-    print json.dumps(e, indent=4, sort_keys=True)
+    #print json.dumps(e, indent=4, sort_keys=True)
+    print(simplejson.dumps(e))
