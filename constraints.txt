@@ -41,6 +41,7 @@ dynd==0.7.3.dev1
 enum34==1.1.6
 et-xmlfile==1.0.1
 fastcache==1.0.2
+fastFM==0.2.11
 Flask==0.12
 Flask-Cors==2.1.2
 funcsigs==1.0.2
