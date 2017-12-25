@@ -179,3 +179,4 @@ plot_columns(rmse_test, labels)
 plot_columns(rmse_test, labels, (0.8, 3.0))
 plot_columns(rmse_test, labels, (0.8, 1.0))
 
+spark.stop()
