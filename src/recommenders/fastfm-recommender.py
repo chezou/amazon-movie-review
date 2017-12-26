@@ -37,7 +37,7 @@ v = DictVectorizer()
 X = v.fit_transform(list(pd_ratings[["user_id", "product_id", "score"]].drop('score', axis=1).T.to_dict().values()))
 y = pd_ratings['score'].tolist()
 
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=42)
 
 from sklearn.preprocessing import StandardScaler
