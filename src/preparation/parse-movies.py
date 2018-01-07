@@ -9,10 +9,10 @@ import simplejson
 from tqdm import tqdm
 from utils import get_line_number
 
-def parse(filename):
+def parse(filename, total):
   f = gzip.open(filename, 'r')
   entry = {}
-  for l in f:
+  for l in tqdm(f, total=total):
     l = l.strip()
     colonPos = l.find(':')
     if colonPos == -1:
@@ -24,8 +24,10 @@ def parse(filename):
     entry[eName] = unicode(rest, errors='ignore')
   yield entry
 
-file_path = "data/movies.txt.gz"
 
-# tqdm doesn't work appropriately with gziped file
-for e in tqdm(parse(file_path), total=get_line_number(file_path)):
-  print(simplejson.dumps(e))
+if __name__ == '__main__':
+  file_path = "data/movies.txt.gz"
+  line_num = get_line_number(file_path)
+
+  for e in parse(file_path, total=line_num):
+    print(simplejson.dumps(e))
